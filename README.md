@@ -2,8 +2,6 @@
 
 **Example R code for fitting the geometric framework proposed by Murphy-Barltrop et al. (2025) for modelling time-varying extremal dependence**
 
-![Limit sets over time](Figures/all_boundary_sets_AAPL_AMZN.png)
-
 <p align="center">
   <img src="Figures/all_boundary_sets_AAPL_AMZN.png" alt="Limit sets over time" width="50%"/>
 </p>
