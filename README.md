@@ -1,4 +1,7 @@
 # NSGE: **N**on-**S**tationary **G**eometric **E**xtremes
+<h1 style="font-weight: normal;"><b>N</b>on-<b>S</b>tationary <b>G</b>eometric <b>E</b>xtremes</h1>
+
+
 **Example R code for fitting the geometric framework proposed by Murphy-Barltrop et al. (2025) for modelling time-varying extremal dependence**
 
 In order to use the **NSGE** codebase in R, you first need to download and install the Github version of the *evgam* package (Youngman, 2019, 2022). Instruction for this are provided below. 
