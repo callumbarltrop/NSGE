@@ -1,6 +1,4 @@
-# NSGE: **N**on-**S**tationary **G**eometric **E**xtremes
-<h1 style="font-weight: normal;"><b>N</b>on-<b>S</b>tationary <b>G</b>eometric <b>E</b>xtremes</h1>
-
+# NSGE: Non-Stationary Geometric Extremes
 
 **Example R code for fitting the geometric framework proposed by Murphy-Barltrop et al. (2025) for modelling time-varying extremal dependence**
 
