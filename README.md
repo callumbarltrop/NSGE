@@ -1,4 +1,4 @@
-# NSGE -- Non-Stationary Geometric Extremes
+# NSGE: **N**on-**S**tationary **G**eometric **E**xtremes
 **Example R code for fitting the geometric framework proposed by Murphy-Barltrop et al. (2025) for modelling time-varying extremal dependence**
 
 In order to use the **NSGE** codebase in R, you first need to download and install the Github version of the *evgam* package (Youngman, 2019, 2022). Instruction for this are provided below. 
