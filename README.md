@@ -1,6 +1,6 @@
 # NSGE: Non-Stationary Geometric Extremes
 
-**Example R code for fitting the geometric framework proposed by Murphy-Barltrop et al. (2025) for modelling time-varying extremal dependence**
+**Example R code for fitting the geometric framework proposed by Murphy-Barltrop et al. (2025) for modelling time-varying extremal dependence.**
 
 <p align="center">
   <img src="Figures/all_boundary_sets_AAPL_AMZN.png" alt="Limit sets over time" width="50%"/>
@@ -40,16 +40,16 @@ In the folder **FilteredReturns_APPL_AMZN**, we have provided code for reproduci
 
 ## Descriptions of the provided folders and R scripts 
 
-Below, we provide brief descriptions of each folder and R script
+Below, we provide brief descriptions of each folder and R script.
 
-**Folders**
+**Folders:**
 
 * **Figures** - folder containing R code and plots. This can be used to reproduce many of the plots from the article, and to gain intuition regarding the geometric interpretation of the framework
 * **FilteredReturns_APPL_AMZN** - folder containing the code required for reproducing part of the case study from the article
 * **FilteredReturns_APPL_AMZN/data** - folder for storing data related to the Apple-Amazon model fit, such as log-return series', spline coefficients, and parameter estimates
 * **FilteredReturns_APPL_AMZN/figures** - folder for storing all figure obtained from the Apple-Amazon model fit
   
-**R scripts**
+**R scripts:**
 
 * **Figures/example_figures.R** - R script for recreating many of the plots from the article
 * **FilteredReturns_APPL_AMZN/fitting_models.R** - R script for fitting the radial and angular models to the Apple-Amazon data
