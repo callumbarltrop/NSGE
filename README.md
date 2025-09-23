@@ -38,15 +38,18 @@ In the folder **FilteredReturns_APPL_AMZN**, we have provided code for reproduci
 Below, we provide brief descriptions of each folder and R script
 
 **Folders**
+
 * **Figures** - folder containing R code and plots. This can be used to reproduce many of the plots from the article, and to gain intuition regarding the geometric interpretation of the framework
 * **FilteredReturns_APPL_AMZN** - folder containing the code required for reproducing part of the case study from the article
 * **FilteredReturns_APPL_AMZN/data** - folder for storing data related to the Apple-Amazon model fit, such as log-return series', spline coefficients, and parameter estimates
 * **FilteredReturns_APPL_AMZN/figures** - folder for storing all figure obtained from the Apple-Amazon model fit
+  
 **R scripts**
+
 * **Figures/example_figures.R** - R script for recreating many of the plots from the article
 * **FilteredReturns_APPL_AMZN/fitting_models.R** - R script for fitting the radial and angular models to the Apple-Amazon data
 
-The remaining **preamble.R** files in both folders containg required functions and packages for fitting the modelling framework. 
+The remaining **preamble.R** files in both folders contain required functions and packages for fitting the modelling framework(s). 
 
 ## Questions?
 
@@ -54,7 +57,7 @@ Please get in touch via email if you have any questions, or if you find a bug in
 
 ### References
 
- Murphy-Barltrop, C. J. R., Wadsworth, J. L., de Carvalho, M., & Youngman, B. D. (2025). Modelling non-stationary extremal dependence through a geometric approach. arXiv preprint. 
+Murphy-Barltrop, C. J. R., Wadsworth, J. L., de Carvalho, M., & Youngman, B. D. (2025). Modelling non-stationary extremal dependence through a geometric approach. arXiv preprint. 
 
 Youngman, B. D. (2019). Generalized additive models for exceedances of high thresholds with an application to return level estimation for US wind gusts. Journal of the American Statistical Association, 114(528), 1865-1879.
 
