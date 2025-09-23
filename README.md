@@ -4,7 +4,9 @@
 
 ![Limit sets over time](Figures/all_boundary_sets_AAPL_AMZN.png)
 
-<img src="Figures/all_boundary_sets_AAPL_AMZN.png" alt="Limit sets over time" width="50%"/>
+<p align="center">
+  <img src="Figures/all_boundary_sets_AAPL_AMZN.png" alt="Limit sets over time" width="50%"/>
+</p>
 
 In order to use the **NSGE** codebase in R, you first need to download and install the Github version of the *evgam* package (Youngman, 2019, 2022). Instruction for this are provided below. 
 
