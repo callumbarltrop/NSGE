@@ -2,6 +2,8 @@
 
 **Example R code for fitting the geometric framework proposed by Murphy-Barltrop et al. (2025) for modelling time-varying extremal dependence**
 
+![Limit sets over time](Figures/all_boundary_sets_AAPL_AMZN.png)
+
 In order to use the **NSGE** codebase in R, you first need to download and install the Github version of the *evgam* package (Youngman, 2019, 2022). Instruction for this are provided below. 
 
 ## Instructions for installing *evgam* from Github
