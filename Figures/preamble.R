@@ -196,47 +196,47 @@ truncated_gamma_nll = function(log_gauge,r,r_thresh){
   return(-ll)
 }
 
-trun_gamma_d0 <- function(pars, likdata) {
-
-  # this is needed, and should be fine
-  pars <- split(pars, likdata$idpars)
-
-  # likdata$X should be set up by evgam
-  log_gauge <- likdata$X[[1]] %*% pars[[1]]
-
-  nllh = sum(mapply(truncated_gamma_nll,log_gauge,polar_df_exc$r,polar_df_exc$r_thresh))
-
-  return(nllh)
-}
-
-trun_gamma_d12 <- function(pars, likdata, sandwich = TRUE) {
-
-  # this is needed, and should be fine
-  pars <- split(pars, likdata$idpars)
-
-  # likdata$X should be set up by evgam
-  log_gauge <- likdata$X[[1]] %*% pars[[1]]
-
-  deriv_matrix = matrix(NA,ncol=2,nrow=length(log_gauge))
-
-  for(i in 1:length(log_gauge)){
-    point = log_gauge[i]
-
-    grad_result <- grad(truncated_gamma_nll,point,r=polar_df_exc$r[i],r_thresh = polar_df_exc$r_thresh[i])
-
-    hessian_result <- hessian(truncated_gamma_nll, point,r=polar_df_exc$r[i],r_thresh = polar_df_exc$r_thresh[i])
-
-    deriv_matrix[i,] = c(grad_result,c(hessian_result))
-  }
-
-  return(deriv_matrix)
-}
-
-trun_gamma_fns <- list(d0 = trun_gamma_d0, d120 = trun_gamma_d12, d340 = NULL)
-
-unlink <- list(function(x){exp(x)})
-attr(unlink[[1]], "deriv") <- unlink[[1]]
-#tgamma_quantile <- function(p){ -log(1-p) } #ignore this part
-
-#trun_gamma_fns$q <- tgamma_quantile
-trun_gamma_fns$unlink <- unlink
+# trun_gamma_d0 <- function(pars, likdata) {
+# 
+#   # this is needed, and should be fine
+#   pars <- split(pars, likdata$idpars)
+# 
+#   # likdata$X should be set up by evgam
+#   log_gauge <- likdata$X[[1]] %*% pars[[1]]
+# 
+#   nllh = sum(mapply(truncated_gamma_nll,log_gauge,polar_df_exc$r,polar_df_exc$r_thresh))
+# 
+#   return(nllh)
+# }
+# 
+# trun_gamma_d12 <- function(pars, likdata, sandwich = TRUE) {
+# 
+#   # this is needed, and should be fine
+#   pars <- split(pars, likdata$idpars)
+# 
+#   # likdata$X should be set up by evgam
+#   log_gauge <- likdata$X[[1]] %*% pars[[1]]
+# 
+#   deriv_matrix = matrix(NA,ncol=2,nrow=length(log_gauge))
+# 
+#   for(i in 1:length(log_gauge)){
+#     point = log_gauge[i]
+# 
+#     grad_result <- grad(truncated_gamma_nll,point,r=polar_df_exc$r[i],r_thresh = polar_df_exc$r_thresh[i])
+# 
+#     hessian_result <- hessian(truncated_gamma_nll, point,r=polar_df_exc$r[i],r_thresh = polar_df_exc$r_thresh[i])
+# 
+#     deriv_matrix[i,] = c(grad_result,c(hessian_result))
+#   }
+# 
+#   return(deriv_matrix)
+# }
+# 
+# trun_gamma_fns <- list(d0 = trun_gamma_d0, d120 = trun_gamma_d12, d340 = NULL)
+# 
+# unlink <- list(function(x){exp(x)})
+# attr(unlink[[1]], "deriv") <- unlink[[1]]
+# #tgamma_quantile <- function(p){ -log(1-p) } #ignore this part
+# 
+# #trun_gamma_fns$q <- tgamma_quantile
+# trun_gamma_fns$unlink <- unlink

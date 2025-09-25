@@ -2,23 +2,12 @@
 
 source("preamble.R")
 
-library(SphericalCubature)
-library(copula)
-library(rgl)
-library(evd)
 library(rgl)
 
-sim_data_normal = function(rho){
+sim_data_normal_fn = function(rho){
   d = 2
   normc = normalCopula(param = rho, dim = d)
   return(apply(rCopula(1, copula = normc),2,Laplace_inverse))
-}
-
-Laplace_inverse = function(u){ #standard Laplace quantile function
-  x = c()
-  x[u<=0.5] = log(2*u[u<=0.5])
-  x[u>0.5] = -log(2*(1-u[u>0.5]))
-  return(x)
 }
 
 pred_phis = seq(0,2*pi,length.out=251)
@@ -196,7 +185,7 @@ dev.off()
 rhos = seq(-.8,0.8,length.out=n)
 
 set.seed(2311)
-sim_data = t(sapply(rhos,sim_data_normal))
+sim_data = t(sapply(rhos,sim_data_normal_fn))
 
 num_windows = 8
 
@@ -219,88 +208,6 @@ for(i in 1:num_windows){
   
   dev.off()
 }
-
-ns_gauges_normal = sapply(rhos[time_indices],function(p){
-  return(unit_circle/apply(unit_circle,1, gauge_normal,rho=p))
-},simplify = F)
-
-alphas = seq(0.3,0.7,length.out=n)
-
-ns_gauges_invlog = sapply(alphas[time_indices],function(p){
-  return(unit_circle/apply(unit_circle,1, gauge_inv_logistic,dep=p))
-},simplify = F)
-
-rho = 0.5
-nus = seq(0.5,2,length.out=n)
-
-ns_gauges_t = sapply(nus[time_indices],function(p){
-  return(unit_circle/apply(unit_circle,1, gauge_mv_t,nu=p))
-},simplify = F)
-
-t1 = 0.45*(0:(n-1))/(n-1)
-t2 = sin((5*pi/2)*(0:(n-1))/(n-1))/2
-
-rhos = t1 + t2
-
-ns_gauges_normal2 = sapply(rhos[time_indices],function(p){
-  return(unit_circle/apply(unit_circle,1, gauge_normal,rho=p))
-},simplify = F)
-
-gammas = seq(0.7,2.5,len=n)
-rho = 0.5
-
-ns_gauges_hw = sapply(gammas[time_indices],function(p){
-  return(unit_circle/apply(unit_circle,1, gauge_hw,par=c(p,rho)))
-},simplify = F)
-
-# Create a color function using colorRampPalette
-colfunc <- colorRampPalette(c("blue", "orange"))
-
-# Generate a vector of 10 colors from the palette
-cols <- colfunc(length(time_indices))
-
-pdf(file="ns_limit_sets.pdf",width=15,height=10)
-
-#Setting plotting parameters
-par(mfrow=c(2,3),mgp=c(2.5,1,0),mar=c(5,4,4,2)+0.1)
-
-plot(ns_gauges_normal[[1]],xlim=c(-1,1),ylim=c(-1,1),xlab=expression(X[1]),ylab=expression(X[2]),type="l",lwd=2,col=cols[1],main="Copula 1",cex.lab=1.5, cex.axis=1.5,cex.main=1.7)
-rect(-1,-1,1,1,lwd=4,lty=2,col=NULL)
-for(i in 2:length(time_indices)){
-  lines(ns_gauges_normal[[i]],lwd=2,col=cols[i])
-}
-
-plot(ns_gauges_normal2[[1]],xlim=c(-1,1),ylim=c(-1,1),xlab=expression(X[1]),ylab=expression(X[2]),type="l",lwd=2,col=cols[1],main="Copula 2",cex.lab=1.5, cex.axis=1.5,cex.main=1.7)
-rect(-1,-1,1,1,lwd=4,lty=2,col=NULL)
-for(i in 2:length(time_indices)){
-  lines(ns_gauges_normal2[[i]],lwd=2,col=cols[i])
-}
-
-plot(ns_gauges_invlog[[1]],xlim=c(-1,1),ylim=c(-1,1),xlab=expression(X[1]),ylab=expression(X[2]),type="l",lwd=2,col=cols[1],main="Copula 3",cex.lab=1.5, cex.axis=1.5,cex.main=1.7)
-rect(-1,-1,1,1,lwd=4,lty=2,col=NULL)
-for(i in 2:length(time_indices)){
-  lines(ns_gauges_invlog[[i]],lwd=2,col=cols[i])
-}
-
-plot(ns_gauges_t[[1]],xlim=c(-1,1),ylim=c(-1,1),xlab=expression(X[1]),ylab=expression(X[2]),type="l",lwd=2,col=cols[1],main="Copula 4",cex.lab=1.5, cex.axis=1.5,cex.main=1.7)
-rect(-1,-1,1,1,lwd=4,lty=2,col=NULL)
-for(i in 2:length(time_indices)){
-  lines(ns_gauges_t[[i]],lwd=2,col=cols[i])
-}
-
-plot(ns_gauges_hw[[1]],xlim=c(-1,1),ylim=c(-1,1),xlab=expression(X[1]),ylab=expression(X[2]),type="l",lwd=2,col=cols[1],main="Copula 5",cex.lab=1.5, cex.axis=1.5,cex.main=1.7)
-rect(-1,-1,1,1,lwd=4,lty=2,col=NULL)
-for(i in 2:length(time_indices)){
-  lines(ns_gauges_hw[[i]],lwd=2,col=cols[i])
-}
-
-plot(1, 1, type = "n", xlab = "", ylab = "", axes = FALSE)
-
-# Add a legend
-legend("center", legend = c("Start of time frame", "End of time frame"), 
-       col = c("blue", "orange"), lwd=4,cex=2.3)
-
-dev.off()
 
 # Rho function --------------------------------------------------------
 
@@ -513,7 +420,7 @@ time = 1:n
 
 rhos = seq(0,0.8,length.out=n)
 
-sim_data = t(sapply(rhos,sim_data_normal))
+sim_data = t(sapply(rhos,sim_data_normal_fn))
 
 polar = rect2polar(t(sim_data))
 
@@ -531,9 +438,11 @@ time_knots = seq(min(time),max(time),length.out=knot_time)
 knots = list(phi = phi_knots,t = time_knots)
 
 #Fitting qgam
-# qr_model = qgam(as.formula(fmla_qgam), data=polar_df,  qu=tau,argGam = list(knots = knots) )
-# 
-# saveRDS(qr_model,file="example_qr.rds")
+if(!file.exists("example_tg.rds")){
+  qr_model = qgam(as.formula(fmla_qgam), data=polar_df,  qu=tau,argGam = list(knots = knots) )
+  
+  saveRDS(qr_model,file="example_qr.rds")
+}
 
 qr_model = readRDS("example_qr.rds")
 
@@ -560,11 +469,11 @@ pred_thresh = predict(qr_model, newdata=pred_df)
 thresh_surface = list(phi = pred_grid$Var1,time_cov = pred_grid$Var2,r=pred_thresh)
 
 open3d()
-plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r,col="grey",pch=16,cex=2,xlab=expression(theta),ylab="t",zlab="r")
+plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r,col="grey",pch=16,cex=2,xlab=expression(phi),ylab="t",zlab="r")
 
 clear3d()
 
-plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r,col=col_vec,pch=16,cex=2,xlab=expression(theta),ylab="t",zlab="r")
+plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r,col=col_vec,pch=16,cex=2,xlab=expression(phi),ylab="t",zlab="r")
 surface3d(x=matrix(thresh_surface$phi, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])),
           y=matrix(thresh_surface$time_cov, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])),
           z=matrix(exp(thresh_surface$r), nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])), alpha=.3, col="blue")
@@ -578,60 +487,15 @@ positive_exceedances_indicator = which(polar_df$r - thresh_function>0)
 #Obtaining exceedances
 polar_df_exc = data.frame(r=polar_df$r[positive_exceedances_indicator],phi = (polar$phi[1,])[positive_exceedances_indicator],r_thresh=thresh_function[positive_exceedances_indicator],t=time[positive_exceedances_indicator])
 
-
 #Defining formula for truncated gamma
 fmla_trun_gamma = list(gauge = as.formula(paste0("r ~ te(phi,t,bs=c('cc','cr'),k=c(",knot_angle,",",knot_time,"))")))
 
-#Selecting initial values for gauge function
-inits = log(apply(matrix(c(1,1),ncol=2),1,l2_norm))
-
-
-trun_gamma_d0 <- function(pars, likdata) {
+#Fitting evgam truncated gamma model 
+if(!file.exists("example_tg.rds")){
+  tg_model <- evgam(fmla_trun_gamma, data = polar_df_exc, family = 'ltgammab', trace = 2, args = list(left = polar_df_exc$r_thresh, alpha = 2), knots = knots)
   
-  # this is needed, and should be fine
-  pars <- split(pars, likdata$idpars)
-  
-  # likdata$X should be set up by evgam
-  log_gauge <- likdata$X[[1]] %*% pars[[1]]
-  
-  nllh = sum(mapply(truncated_gamma_nll,log_gauge,polar_df_exc$r,polar_df_exc$r_thresh))
-  
-  return(nllh)
+  saveRDS(tg_model,file="example_tg.rds")
 }
-
-trun_gamma_d12 <- function(pars, likdata, sandwich = TRUE) {
-  
-  # this is needed, and should be fine
-  pars <- split(pars, likdata$idpars)
-  
-  # likdata$X should be set up by evgam
-  log_gauge <- likdata$X[[1]] %*% pars[[1]]
-  
-  deriv_matrix = matrix(NA,ncol=2,nrow=length(log_gauge))
-  
-  for(i in 1:length(log_gauge)){
-    point = log_gauge[i]
-    
-    grad_result <- grad(truncated_gamma_nll,point,r=polar_df_exc$r[i],r_thresh = polar_df_exc$r_thresh[i])
-    
-    hessian_result <- hessian(truncated_gamma_nll, point,r=polar_df_exc$r[i],r_thresh = polar_df_exc$r_thresh[i])
-    
-    deriv_matrix[i,] = c(grad_result,c(hessian_result))
-  }
-  
-  return(deriv_matrix)
-}
-
-trun_gamma_fns <- list(d0 = trun_gamma_d0, d120 = trun_gamma_d12, d340 = NULL)
-
-unlink <- list(function(x){exp(x)})
-attr(unlink[[1]], "deriv") <- unlink[[1]]
-trun_gamma_fns$unlink <- unlink
-
-# #Fitting custom evgam truncated gamma model 
-# tg_model <- evgam(fmla_trun_gamma, data = polar_df_exc, family = 'custom', custom.fns = trun_gamma_fns, trace = 2, inits = inits,knots = knots)
-# 
-# saveRDS(tg_model,file="example_tg.rds")
 
 tg_model = readRDS("example_tg.rds")
 
@@ -641,9 +505,8 @@ gauge_surface = list(phi = pred_grid$Var1,time_cov = pred_grid$Var2,r=as.vector(
 
 gauge_surface = as.data.frame(gauge_surface)
 
-# open3d()
 
-plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r/log(n/2),col="grey",pch=16,cex=2,xlab=expression(theta),ylab="t",zlab="r")
+plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r/log(n/2),col="grey",pch=16,cex=2,xlab=expression(phi),ylab="t",zlab="r")
 surface3d(x=matrix(gauge_surface$phi, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])),
           y=matrix(gauge_surface$time_cov, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])),
           z=matrix(1/gauge_surface$gauge, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])), alpha=.3, col="blue")
