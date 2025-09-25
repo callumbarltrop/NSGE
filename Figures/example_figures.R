@@ -198,7 +198,7 @@ cols <- colfunc(num_windows)
 for(i in 1:num_windows){
   pdf(file=paste0("ns_data",i,".pdf"),width=5,height=5)
   
-  plot(sim_data[1:(n/num_windows),],xlim=c(-10,10),ylim=c(-10,10),xlab=expression(X[1]),ylab=expression(X[2]),type="p",pch=16,col=cols[1],main=paste0("Obsevation window ",i),cex.lab=1.2, cex.axis=1.5,cex.main=1.7)
+  plot(sim_data[1:(n/num_windows),],xlim=c(-10,10),ylim=c(-10,10),xlab=expression(X[1]),ylab=expression(X[2]),type="p",pch=16,col=cols[1],main=paste0("Observation window ",i),cex.lab=1.2, cex.axis=1.5,cex.main=1.7)
   
   if(i > 1){
     for(j in 2:i){
@@ -478,7 +478,6 @@ surface3d(x=matrix(thresh_surface$phi, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(d
           y=matrix(thresh_surface$time_cov, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])),
           z=matrix(exp(thresh_surface$r), nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])), alpha=.3, col="blue")
 
-# close3d()
 clear3d()
 
 #checking which exceedances are positive 
@@ -499,17 +498,16 @@ if(!file.exists("example_tg.rds")){
 
 tg_model = readRDS("example_tg.rds")
 
-pred_gauge = as.vector(exp(predict(tg_model, newdata=pred_df)))
+pred_gauge = predict(tg_model, newdata = pred_df, type = 'response')$rate
 
-gauge_surface = list(phi = pred_grid$Var1,time_cov = pred_grid$Var2,r=as.vector(pred_gauge))
+gauge_surface = list(phi = pred_grid$Var1, time_cov = pred_grid$Var2, r = pred_gauge)
 
 gauge_surface = as.data.frame(gauge_surface)
 
-
-plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r/log(n/2),col="grey",pch=16,cex=2,xlab=expression(phi),ylab="t",zlab="r")
+plot3d(x=polar_df$phi,y=polar_df$t,z=polar_df$r/log(n/2),col="grey",pch=16,cex=2,xlab=expression(theta),ylab="t",zlab="r")
 surface3d(x=matrix(gauge_surface$phi, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])),
           y=matrix(gauge_surface$time_cov, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])),
-          z=matrix(1/gauge_surface$gauge, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])), alpha=.3, col="blue")
+          z=matrix(1/gauge_surface$r, nrow=sqrt(dim(pred_grid)[1]), ncol=sqrt(dim(pred_grid)[1])), alpha=.3, col="blue")
 
 close3d()
 
@@ -527,7 +525,7 @@ par(mfrow=c(1,1),mgp=c(2.5,1,0),mar=c(5,4,4,2)+0.1)
 
 for(i in 1:length(time_points)){
   
-  pred_gauge = exp(predict(tg_model, newdata=list(phi=pred_phis,t = rep(time_points[i],length(pred_phis))))$gauge)
+  pred_gauge = predict(tg_model, newdata=list(phi=pred_phis,t = rep(time_points[i],length(pred_phis))), type = 'response')$rate
   
   est_limit_set = unit_circle/pred_gauge
   
@@ -540,7 +538,7 @@ for(i in 1:length(time_points)){
   rect(-1,-1,1,1,lwd=4,lty=2,col=NULL)
   
   legend("topleft", legend = c("Start", "End"), 
-           col = c("blue", "orange"), lwd=3,cex=1.6,bg="white")
+         col = c("blue", "orange"), lwd=3,cex=1.6,bg="white")
   
   
 }
