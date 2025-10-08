@@ -428,110 +428,6 @@ for(s in symbols){
 
 dev.off()
 
-# Testing for time-varying extremal dependence  -------------------------------------------------
-
-n_orthants = 4
-
-s = symbols[1]
-
-s2 = symbols[2]
-
-mp_q = 0.95 # Quantile level for min-projection variable 
-
-alpha = 0.1 # Significance level for hypothesis test
-
-k = 5 # Number of time windows for dividing the data 
-
-loglik_LT=function(etavec,z) #log-likelihood function associated with the Ledford-Tawn model 
-{
-  sum(-z/etavec - log(etavec))
-}
-
-data_lap = cbind(laplace_datasets[[s]],laplace_datasets[[s2]]) # Laplace data as a matrix 
-
-p_vals = c()
-
-pdf(file=paste0("figures/eta_significance_test_",s,"_",s2,".pdf"),width=8,height=8)
-
-par(mfrow=c(2,2),mgp=c(2.5,1,0),mar=c(5,4,4,2)+0.1)
-
-for(i in 1:n_orthants){
-  
-  # Transform data in each orthant to standard exponential margins 
-  
-  data_exp = data_lap
-  
-  if(i == 2){
-    data_exp = cbind(-data_lap[,1],data_lap[,2])
-  } else if(i == 3) {
-    data_exp = cbind(-data_lap[,1],-data_lap[,2])
-  } else if(i == 4){
-    data_exp = cbind(data_lap[,1],-data_lap[,2])
-  }
-  
-  data_exp = apply(data_exp,2,function(x){qexp(Laplace_cdf(x))})
-  
-  n<-u<-eta<-NULL
-  
-  # Plot the observed min-projection over time 
-  
-  plot(dates,apply(data_exp,1,min),pch=16,col="grey",ylab = "Min-projection", xlab = "Date",main=paste0("Quadrant ",i,", ",symbols2[which(symbols==s)],"-",symbols2[which(symbols==s2)]),cex.lab=1.2, cex.axis=1.2,cex.main=1.2,sub=paste0("Significance value ",alpha))
-  
-  abline(v=min(dates),col=2)
-  
-  # For each block, fit the Ledford Tawn model and estimate the eta coefficient 
-  
-  z=NULL
-  for(j in 1:k)
-  {
-    inc=floor(n_data/k)
-    ind=((j-1)*inc+1):(j*inc)
-    
-    mn=apply(data_exp[ind,],1,min)
-    
-    u[j]=quantile(mn,mp_q)
-    n[j]=sum(mn>u[j])
-    points((dates[ind])[mn>u[j]],mn[mn>u[j]],col=2,pch=20)
-    abline(v=max(dates[ind]),col=2)
-    
-    z=c(z,mn[mn>u[j]]-u[j])
-    
-    eta[j]=mean(mn[mn>u[j]]-u[j])
-  }
-  
-  # Evaluate model for constant eta 
-  
-  uvec1=unlist(c(sapply(1:k, function(j){rep(u[j],n[j])})))
-  etavec1=rep(mean(eta),length(uvec1))
-  
-  # Evaluate model for varying eta 
-  
-  etavec2=unlist(c(sapply(1:k, function(j){rep(eta[j],n[j])})))
-  
-  # Compute likelihood ratio test statistic 
-  
-  LR=2*(loglik_LT(etavec = etavec2,z=z)-loglik_LT(etavec = etavec1,z=z))
-  
-  # Evaluate p value from relevant Chisquared distribution
-  
-  p_val = pchisq(LR,lower.tail = F,df=k-1)
-  
-  p_vals[i] = p_val
-  
-  font_style = ifelse(p_val < alpha,2,1)
-  
-  legend("topleft",legend=paste0("p value = ",signif(p_val,3)),cex=1.2,bg="white",text.font=font_style)
-  
-}
-
-dev.off()
-
-p_val_mat = data.frame(matrix(signif(p_vals,3),ncol=4,nrow=1 ))
-
-names(p_val_mat) = c("Quadrant 1","Quadrant 2","Quadrant 3","Quadrant 4")
-
-print(p_val_mat)
-
 # Fitting the geometric extremes model -----------------------------------------------------------
 
 pred_phis = seq(0,2*pi,length.out=201) # Fine grid of polar angles upon which to evaluate model 
@@ -539,6 +435,8 @@ pred_phis = seq(0,2*pi,length.out=201) # Fine grid of polar angles upon which to
 s = symbols[1]
 
 s2 = symbols[2]
+
+data_lap = cbind(laplace_datasets[[s]],laplace_datasets[[s2]]) # Laplace data as a matrix 
 
 d = 2
 
